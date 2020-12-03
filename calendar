@@ -1,0 +1,86 @@
+def readline():
+    year = input("Enter full year(e.g.2002):")
+    try:
+        year = int(year)
+    except ValueError:
+        print("please input again!")
+    else:
+        month = input("Enter month as number between 1 and 12:")
+
+    try:
+        month = int(month)
+    except ValueError:
+        print("please input again!")
+    else:
+        return year,month
+
+
+def getMonthName(mouth):
+    month_dict = {1: "January", 2: 'February', 3: 'March', 4: 'April', 5: 'May', 6: 'June',
+                  7: 'July', 8: 'August', 9: 'September', 10: 'October', 11: 'November', 12: 'December'}
+    return month_dict[mouth]
+
+def printMonthTiltle(year,month):
+    print("          "+getMonthName(month)+"   "+ str(year))
+    print("-"*50)
+    print("Sun"+"\t"+"Mon"+"\t"+"Tue"+"\t"+"Wed"+"\t"+"Thu"+"\t"+"Fri"+"\t"+"Sat")
+
+def is_leap_year(year):
+    if year%4==0 and year%100 != 0:
+        return True
+    elif year%100==0 and year%400==0:
+        return True
+    else:
+        return False
+
+def get_days_of_month(year,month):
+    if month in (1, 3, 5, 7, 8, 10, 12):
+        return 31
+    elif month in (4, 6, 9, 11):
+        return 30
+    elif is_leap_year(year):
+        return 29
+    else:
+        return 28
+
+def getTotalNumofDays1(year,month):
+    total = 0
+    for i in range(year-1988):
+        if is_leap_year(i+1988):
+            total += 366
+        else:
+            total += 365
+    for i in range(month-1):
+        total += get_days_of_month(year,i+1)
+    total += 1
+    return total
+
+
+def getStartDay(year,month):  #返回一个整数，表示星期几
+    days = getTotalNumofDays1(year,month)
+    return (days%7+4)%7
+
+def printMonthBody(year,month):
+    times = 0
+    for i in range(get_days_of_month(year,month)):
+        if i == 0:
+            print("\t"*getStartDay(year,month)+str(i+1),end="\t")
+        else:
+            if i == 7 - getStartDay(year, month):
+                print("\n")
+                print(str(i + 1), end="\t")
+                times = 0
+            elif times == 6:
+                print("\n")
+                print(str(i + 1), end="\t")
+                times = 0
+            else:
+                print(str(i + 1), end="\t")
+                times += 1
+
+def printCanlendar():
+    year,month = readline()
+    printMonthTiltle(year,month)
+    printMonthBody(year,month)
+
+printCanlendar()
